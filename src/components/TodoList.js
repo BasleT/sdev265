@@ -3,6 +3,8 @@ import { Box, Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ItemCard from "./ItemCard";
 import AddItemModal from "./AddItemModal";
+import SearchBar from "./SearchBar";
+import ShareButton from "./ShareButton";
 
 const TodoList = ({ listType = "todo" }) => {
   const [todoItems, setTodoItems] = useState([]);
@@ -21,32 +23,57 @@ const TodoList = ({ listType = "todo" }) => {
     setTodoItems(todoItems.filter((item) => item.id !== itemId));
   };
 
+  const handleUpdateItem = (updatedItem) => {
+    setTodoItems(todoItems.map((item) => (item.id === updatedItem.id ? updatedItem : item)));
+  };
+
   const handleAddItem = (newItem) => {
     if (newItem) {
-      setTodoItems([...todoItems, { id: Date.now(), text: newItem }]);
+      setTodoItems([...todoItems, { id: Date.now(), text: newItem, subItems: [] }]);
+      setAddItemModalOpen(false);
     }
-    setAddItemModalOpen(false);
   };
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+  };
+
+  const filteredItems = todoItems.filter((item) =>
+    item.text.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
+      <SearchBar onSearch={handleSearch} />
       <Box display="flex" flexWrap="wrap">
-        {todoItems.map((item) => (
-          <ItemCard key={item.id} item={item} onDelete={() => handleDeleteItem(item.id)} />
+        {filteredItems.map((item) => (
+          <ItemCard
+            key={item.id}
+            item={item}
+            onDelete={() => handleDeleteItem(item.id)}
+            onUpdate={handleUpdateItem} // Pass the onUpdate function
+          />
         ))}
       </Box>
-      <Fab
-        color="primary"
-        aria-label="add"
-        sx={{ position: "fixed", bottom: 16, right: 16 }}
-        onClick={() => setAddItemModalOpen(true)}
-      >
-        <AddIcon />
-      </Fab>
+      <Box sx={{ position: "fixed", bottom: 16, right: 16 }}>
+        <Fab
+          color="primary"
+          aria-label="add"
+          onClick={() => setAddItemModalOpen(true)}
+        >
+          <AddIcon />
+        </Fab>
+        <ShareButton
+          listItems={filteredItems}
+          sx={{ marginLeft: 2, marginRight: 2 }}
+        />
+      </Box>
       <AddItemModal
         open={addItemModalOpen}
         handleClose={() => setAddItemModalOpen(false)}
-        onAddItem={(newItem) => handleAddItem(newItem)}
+        onAddItem={handleAddItem}
       />
     </div>
   );

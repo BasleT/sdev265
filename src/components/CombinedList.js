@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Box, Grid, Fab } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Box, Grid } from "@mui/material";
 import TodoList from "./TodoList";
 import GroceryList from "./GroceryList";
 import AddItemModal from "./AddItemModal";
+import SearchBar from "./SearchBar";
 
 const CombinedList = () => {
   const [addItemModalOpen, setAddItemModalOpen] = useState(false);
@@ -27,14 +27,6 @@ const CombinedList = () => {
           <TodoList />
         </Grid>
       </Grid>
-      <Fab
-        color="primary"
-        aria-label="add"
-        sx={{ position: "fixed", bottom: 16, right: 16 }}
-        onClick={() => setAddItemModalOpen(true)}
-      >
-        <AddIcon />
-      </Fab>
       <AddItemModal
         open={addItemModalOpen}
         handleClose={() => setAddItemModalOpen(false)}

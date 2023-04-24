@@ -18,12 +18,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 
-const ItemCard = ({ item, onDelete, items, setItems }) => {
-  const [subItems, setSubItems] = useState(item.sublist || []);
+const ItemCard = ({ item, onDelete, items, setItems, onUpdate, onAdd }) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [addSubItemModalOpen, setAddSubItemModalOpen] = useState(false);
   const [editedText, setEditedText] = useState(item.text);
-  const [newSubItemText, setNewSubItemText] = useState("");
+  const [newSubItemText, setNewSubItemText] = useState('');
+
 
   const handleEdit = () => {
     setEditedText(item.text);
@@ -36,20 +36,20 @@ const ItemCard = ({ item, onDelete, items, setItems }) => {
 
   const handleAddSubItem = () => {
     if (newSubItemText) {
-      setSubItems([...subItems, { id: Date.now(), text: newSubItemText, crossedOut: false }]);
+      onUpdate({ ...item, subItems: [...item.subItems, { id: Date.now(), text: newSubItemText, crossedOut: false }] });
       setNewSubItemText("");
       setAddSubItemModalOpen(false);
     }
   };
 
   const handleDeleteSubItem = (subItemId) => {
-    setSubItems(subItems.filter((subItem) => subItem.id !== subItemId));
+    onUpdate({ ...item, subItems: item.subItems.filter((subItem) => subItem.id !== subItemId) });
   };
 
   const handleSave = () => {
     const newItems = items.map((i) => {
       if (i.id === item.id) {
-        return { ...i, text: editedText, sublist: subItems };
+        return { ...i, text: editedText };
       }
       return i;
     });
@@ -62,23 +62,23 @@ const ItemCard = ({ item, onDelete, items, setItems }) => {
   };
 
   const handleEditSubItem = (subItemId) => {
-    const editedSubItem = subItems.find((subItem) => subItem.id === subItemId);
+    const editedSubItem = item.subItems.find((subItem) => subItem.id === subItemId);
     if (editedSubItem) {
       const newSubItemText = prompt("Edit subitem:", editedSubItem.text);
       if (newSubItemText && newSubItemText !== editedSubItem.text) {
-        const updatedSubItems = subItems.map((subItem) =>
+        const updatedSubItems = item.subItems.map((subItem) =>
           subItem.id === subItemId ? { ...subItem, text: newSubItemText } : subItem
         );
-        setSubItems(updatedSubItems);
+        onUpdate({ ...item, subItems: updatedSubItems });
       }
     }
   };
 
   const handleCrossOutSubItem = (subItemId) => {
-    const updatedSubItems = subItems.map((subItem) =>
+    const updatedSubItems = item.subItems.map((subItem) =>
       subItem.id === subItemId ? { ...subItem, crossedOut: !subItem.crossedOut } : subItem
     );
-    setSubItems(updatedSubItems);
+    onUpdate({ ...item, subItems: updatedSubItems });
   };
 
   return (
@@ -95,135 +95,136 @@ const ItemCard = ({ item, onDelete, items, setItems }) => {
         <Typography variant="h5" component="h2">
           {item.text}
         </Typography>
-        {subItems.map((subItem) => (
+        {item.subItems.map((subItem) => (
           <Box key={subItem.id} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <FormControlLabel
-          control={
-          <Checkbox
-          checked={subItem.crossedOut}
-          onChange={() => handleCrossOutSubItem(subItem.id)}
-          />
-          }
-          label={
-          <Typography
-          sx={{
-          textDecoration: subItem.crossedOut ? "line-through" : "none",
-          }}
-          >
-          {subItem.text}
-          </Typography>
-          }
-          />
-          <Box>
-          <IconButton
-          aria-label="edit"
-          size="small"
-          onClick={(e) => {
-          e.stopPropagation();
-          handleEditSubItem(subItem.id);
-          }}
-          >
-          <EditIcon />
-          </IconButton>
-          <IconButton
-          aria-label="delete"
-          size="small"
-          onClick={(e) => {
-          e.stopPropagation();
-          handleDeleteSubItem(subItem.id);
-          }}
-          >
-          <DeleteIcon />
-          </IconButton>
-          </Box>
-          </Box>
-          ))}
-          </CardContent>
-          <Box
-          sx={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          padding: 1,
-          }}
-          >
-          <IconButton
-          aria-label="delete"
-          size="small"
-          onClick={(e) => {
-          e.stopPropagation();
-          handleDelete();
-          }}
-          >
-          <DeleteIcon />
-          </IconButton>
-          <IconButton
-          aria-label="edit"
-          size="small"
-          onClick={(e) => {
-          e.stopPropagation();
-          handleEdit();
-          }}
-          >
-          <EditIcon />
-          </IconButton>
-          <IconButton
-          aria-label="add"
-          size="small"
-          onClick={(e) => {
-          e.stopPropagation();
-          handleAddSubItemModal();
-          }}
-          >
-          <AddIcon />
-          </IconButton>
-          </Box>
-          
-          <Dialog open={editModalOpen} onClose={() => setEditModalOpen(false)}>
-          <DialogTitle>Edit Item</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="item"
-              label="Item Name"
-              type="text"
-              fullWidth
-              value={editedText}
-              onChange={(e) => setEditedText(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setEditModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleSave}>Save</Button>
-          </DialogActions>
-          </Dialog>
-          <Dialog open={addSubItemModalOpen} onClose={() => setAddSubItemModalOpen(false)}>
-          <DialogTitle>Add Subitem</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="new-subitem"
-              label="New Subitem"
-              type="text"
-              fullWidth
-              value={newSubItemText}
-              onChange={(e) => setNewSubItemText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleAddSubItem();
-                }
-              }}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setAddSubItemModalOpen(false)}>Cancel</Button>
-            <Button onClick={handleAddSubItem}>Add</Button>
-          </DialogActions>
-          </Dialog>
-          </Card>
-          );
-          };
-          
-          export default ItemCard;
+<FormControlLabel
+control={
+<Checkbox
+checked={subItem.crossedOut}
+onChange={() => handleCrossOutSubItem(subItem.id)}
+/>
+}
+label={
+<Typography
+sx={{
+textDecoration: subItem.crossedOut ? "line-through" : "none",
+}}
+>
+{subItem.text}
+</Typography>
+}
+/>
+<Box>
+<IconButton
+aria-label="edit"
+size="small"
+onClick={(e) => {
+e.stopPropagation();
+handleEditSubItem(subItem.id);
+}}
+>
+<EditIcon />
+</IconButton>
+<IconButton
+aria-label="delete"
+size="small"
+onClick={(e) => {
+e.stopPropagation();
+handleDeleteSubItem(subItem.id);
+}}
+>
+<DeleteIcon />
+</IconButton>
+</Box>
+</Box>
+))}
+</CardContent>
+<Box
+sx={{
+position: "absolute",
+top: 0,
+right: 0,
+padding: 1,
+}}
+>
+<IconButton
+aria-label="delete"
+size="small"
+onClick={(e) => {
+e.stopPropagation();
+handleDelete();
+}}
+>
+  
+<DeleteIcon />
+</IconButton>
+<IconButton
+aria-label="edit"
+size="small"
+onClick={(e) => {
+e.stopPropagation();
+handleEdit();
+}}
+>
+<EditIcon />
+</IconButton>
+<IconButton
+aria-label="add"
+size="small"
+onClick={(e) => {
+e.stopPropagation();
+handleAddSubItemModal()
+}}
+>
+<AddIcon />
+</IconButton>
+</Box>
+
+<Dialog open={editModalOpen} onClose={() => setEditModalOpen(false)}>
+<DialogTitle>Edit Item</DialogTitle>
+<DialogContent>
+  <TextField
+    autoFocus
+    margin="dense"
+    id="item"
+    label="Item Name"
+    type="text"
+    fullWidth
+    value={editedText}
+    onChange={(e) => setEditedText(e.target.value)}
+  />
+</DialogContent>
+<DialogActions>
+  <Button onClick={() => setEditModalOpen(false)}>Cancel</Button>
+  <Button onClick={handleSave}>Save</Button>
+</DialogActions>
+</Dialog>
+<Dialog open={addSubItemModalOpen} onClose={() => setAddSubItemModalOpen(false)}>
+<DialogTitle>Add Subitem</DialogTitle>
+<DialogContent>
+  <TextField
+    autoFocus
+    margin="dense"
+    id="new-subitem"
+    label="New Subitem"
+    type="text"
+    fullWidth
+    value={newSubItemText}
+    onChange={(e) => setNewSubItemText(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") {
+        handleAddSubItem();
+      }
+    }}
+  />
+</DialogContent>
+<DialogActions>
+  <Button onClick={() => setAddSubItemModalOpen(false)}>Cancel</Button>
+  <Button onClick={handleAddSubItem}>Add</Button>
+</DialogActions>
+</Dialog>
+</Card>
+);
+};
+
+export default ItemCard;

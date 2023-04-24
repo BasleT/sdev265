@@ -1,30 +1,24 @@
-import React, { useState } from "react";
-import { TextField, InputAdornment } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import React from 'react';
+import { Box, InputBase } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
-const SearchBar = ({ placeholder, onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-    onSearch(event.target.value);
+const SearchBar = ({ onSearch }) => {
+  const handleChange = (e) => {
+    onSearch(e.target.value);
   };
 
   return (
-    <TextField
-      variant="outlined"
-      fullWidth
-      placeholder={placeholder}
-      value={searchTerm}
-      onChange={handleChange}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        ),
-      }}
-    />
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <SearchIcon />
+      <InputBase
+        placeholder="Search…"
+        onChange={handleChange}
+        sx={{
+          ml: 1,
+          flex: 1,
+        }}
+      />
+    </Box>
   );
 };
 

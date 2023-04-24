@@ -2,10 +2,24 @@ import React from "react";
 import { IconButton, Tooltip } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 
-const ShareButton = ({ onShare }) => {
+const ShareButton = ({ listItems }) => {
   const handleClick = () => {
-    onShare();
+    if (navigator.share) {
+      navigator
+        .share({
+          title: 'My List',
+          text: 'Check out my list!',
+          url: window.location.href,
+        })
+        .then(() => console.log('Successful share'))
+        .catch((error) => console.log('Error sharing', error));
+    } else {
+      console.log('Sharing is not supported on this platform.');
+    }
   };
+
+
+
 
   return (
     <Tooltip title="Share">

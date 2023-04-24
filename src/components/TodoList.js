@@ -1,32 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { List, TextField, Button, Box, Fab } from "@mui/material";
+import { Box, Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ItemCard from "./ItemCard";
 import AddItemModal from "./AddItemModal";
 
-const TodoList = () => {
-  const [TodoItems, setTodoItems] = useState([]);
+const TodoList = ({ listType = "todo" }) => {
+  const [todoItems, setTodoItems] = useState([]);
   const [addItemModalOpen, setAddItemModalOpen] = useState(false);
 
-  // Load todo items from local storage on mount
   useEffect(() => {
-    const savedItems = JSON.parse(localStorage.getItem("TodoItems")) || [];
+    const savedItems = JSON.parse(localStorage.getItem(listType + "Items")) || [];
     setTodoItems(savedItems);
-  }, []);
+  }, [listType]);
 
-  // Save todo items to local storage whenever the list changes
   useEffect(() => {
-    localStorage.setItem("TodoItems", JSON.stringify(TodoItems));
-  }, [TodoItems]);
-
+    localStorage.setItem(listType + "Items", JSON.stringify(todoItems));
+  }, [listType, todoItems]);
 
   const handleDeleteItem = (itemId) => {
-    setTodoItems(TodoItems.filter((item) => item.id !== itemId)); // Remove the item from the list
+    setTodoItems(todoItems.filter((item) => item.id !== itemId));
   };
 
   const handleAddItem = (newItem) => {
     if (newItem) {
-      setTodoItems([...TodoItems, { id: Date.now(), text: newItem }]);
+      setTodoItems([...todoItems, { id: Date.now(), text: newItem }]);
     }
     setAddItemModalOpen(false);
   };
@@ -34,8 +31,8 @@ const TodoList = () => {
   return (
     <div>
       <Box display="flex" flexWrap="wrap">
-        {TodoItems.map((item) => (
-          <ItemCard key={item.id} item={item.text} onDelete={() => handleDeleteItem(item.id)} />
+        {todoItems.map((item) => (
+          <ItemCard key={item.id} item={item} onDelete={() => handleDeleteItem(item.id)} />
         ))}
       </Box>
       <Fab
@@ -49,9 +46,10 @@ const TodoList = () => {
       <AddItemModal
         open={addItemModalOpen}
         handleClose={() => setAddItemModalOpen(false)}
-        onAddItem={handleAddItem}
+        onAddItem={(newItem) => handleAddItem(newItem)}
       />
     </div>
   );
 };
+
 export default TodoList;

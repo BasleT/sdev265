@@ -1,39 +1,35 @@
-// AddItemModal.js
-import React, { useState, useEffect } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import React, { useState } from "react";
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from "@mui/material";
 
-const AddItemModal = ({ open, handleClose, onAddItem }) => {
-  const [inputValue, setInputValue] = useState("");
+const AddItemModal = ({ open, handleClose, onAddItem, listType }) => {
+  const [newItemText, setNewItemText] = useState("");
 
-  const handleAddItem = () => {
-    onAddItem(inputValue);
-    setInputValue("");
+  const handleAdd = () => {
+    onAddItem(newItemText, listType);
+    setNewItemText("");
     handleClose();
   };
 
   return (
-    <div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Item</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="item"
-            label="Item Name"
-            type="text"
-            fullWidth
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddItem} disabled={!inputValue.trim()}>Add</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>Add Item</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="item"
+          label="Item Name"
+          type="text"
+          fullWidth
+          value={newItemText}
+          onChange={(e) => setNewItemText(e.target.value)}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleAdd}>Add</Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

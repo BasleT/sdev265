@@ -3,7 +3,6 @@ import { Box, Grid } from "@mui/material";
 import TodoList from "./TodoList";
 import GroceryList from "./GroceryList";
 import AddItemModal from "./AddItemModal";
-import SearchBar from "./SearchBar";
 
 const CombinedList = () => {
   const [addItemModalOpen, setAddItemModalOpen] = useState(false);

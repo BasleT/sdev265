@@ -3,7 +3,7 @@ import { Box, Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ItemCard from "./ItemCard";
 import AddItemModal from "./AddItemModal";
-import SearchBar from "./SearchBar";
+import SearchBar from "./SearchBar"
 import ShareButton from "./ShareButton";
 
 const TodoList = ({ listType = "todo" }) => {

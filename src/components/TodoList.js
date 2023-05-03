@@ -83,14 +83,15 @@ const TodoList = ({ listType = "todo" }) => {
         handleClose={() => setAddItemModalOpen(false)}
         onAddItem={handleAddItem}
       />
-      <DeleteConfirmationModal
-        open={deleteConfirmationOpen}
-        onClose={() => setDeleteConfirmationOpen(false)}
-        onDelete={() => {
-          deleteItem(itemToDelete);
-          setDeleteConfirmationOpen(false);
-        }}
-      />
+<DeleteConfirmationModal
+  open={deleteConfirmationOpen}
+  handleClose={() => setDeleteConfirmationOpen(false)}
+  onDelete={() => {
+    deleteItem(itemToDelete);
+    setDeleteConfirmationOpen(false);
+  }}
+/>
+
     </div>
   );
 };

@@ -95,7 +95,8 @@ const ItemCard = ({ item, onDelete, items, setItems, onUpdate, onAdd }) => {
         <Typography variant="h5" component="h2">
           {item.text}
         </Typography>
-        {item.subItems.map((subItem) => (
+        {item.subItems && item.subItems.map((subItem) => (
+
           <Box key={subItem.id} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 <FormControlLabel
 control={

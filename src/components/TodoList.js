@@ -3,12 +3,15 @@ import { Box, Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ItemCard from "./ItemCard";
 import AddItemModal from "./AddItemModal";
-import SearchBar from "./SearchBar"
+import SearchBar from "./SearchBar";
 import ShareButton from "./ShareButton";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 const TodoList = ({ listType = "todo" }) => {
   const [todoItems, setTodoItems] = useState([]);
   const [addItemModalOpen, setAddItemModalOpen] = useState(false);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
     const savedItems = JSON.parse(localStorage.getItem(listType + "Items")) || [];
@@ -20,6 +23,11 @@ const TodoList = ({ listType = "todo" }) => {
   }, [listType, todoItems]);
 
   const handleDeleteItem = (itemId) => {
+    setItemToDelete(itemId);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const deleteItem = (itemId) => {
     setTodoItems(todoItems.filter((item) => item.id !== itemId));
   };
 
@@ -53,7 +61,7 @@ const TodoList = ({ listType = "todo" }) => {
             key={item.id}
             item={item}
             onDelete={() => handleDeleteItem(item.id)}
-            onUpdate={handleUpdateItem} // Pass the onUpdate function
+            onUpdate={handleUpdateItem}
           />
         ))}
       </Box>
@@ -74,6 +82,14 @@ const TodoList = ({ listType = "todo" }) => {
         open={addItemModalOpen}
         handleClose={() => setAddItemModalOpen(false)}
         onAddItem={handleAddItem}
+      />
+      <DeleteConfirmationModal
+        open={deleteConfirmationOpen}
+        onClose={() => setDeleteConfirmationOpen(false)}
+        onDelete={() => {
+          deleteItem(itemToDelete);
+          setDeleteConfirmationOpen(false);
+        }}
       />
     </div>
   );

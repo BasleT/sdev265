@@ -17,7 +17,7 @@ const CombinedList = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{ overflow: "auto" }}>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <GroceryList />

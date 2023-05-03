@@ -38,9 +38,19 @@ const ItemCard = ({ item, onDelete, items, setItems, onUpdate, onAdd }) => {
     if (newSubItemText) {
       onUpdate({ ...item, subItems: [...item.subItems, { id: Date.now(), text: newSubItemText, crossedOut: false }] });
       setNewSubItemText("");
-      setAddSubItemModalOpen(false);
+      setAddSubItemModalOpen(false); // Close the modal
     }
   };
+  
+  
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleAddSubItem();
+    }
+  };
+  
+  
 
   const handleDeleteSubItem = (subItemId) => {
     onUpdate({ ...item, subItems: item.subItems.filter((subItem) => subItem.id !== subItemId) });
@@ -203,21 +213,18 @@ handleAddSubItemModal()
 <Dialog open={addSubItemModalOpen} onClose={() => setAddSubItemModalOpen(false)}>
 <DialogTitle>Add Subitem</DialogTitle>
 <DialogContent>
-  <TextField
-    autoFocus
-    margin="dense"
-    id="new-subitem"
-    label="New Subitem"
-    type="text"
-    fullWidth
-    value={newSubItemText}
-    onChange={(e) => setNewSubItemText(e.target.value)}
-    onKeyDown={(e) => {
-      if (e.key === "Enter") {
-        handleAddSubItem();
-      }
-    }}
-  />
+<TextField
+  autoFocus
+  margin="dense"
+  id="new-subitem"
+  label="New Subitem"
+  type="text"
+  fullWidth
+  value={newSubItemText}
+  onChange={(e) => setNewSubItemText(e.target.value)}
+  onKeyDown={handleKeyPress}
+/>
+
 </DialogContent>
 <DialogActions>
   <Button onClick={() => setAddSubItemModalOpen(false)}>Cancel</Button>

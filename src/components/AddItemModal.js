@@ -21,16 +21,16 @@ const AddItemModal = ({ open, handleClose, onAddItem }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Create a Parent List Name</DialogTitle>
+      <DialogTitle>Create a List Title</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          To add a new Parent List Name, please enter the Name here.
+          Please enter the List Title in the box below
         </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
           id="itemText"
-          label="Parent Name"
+          label="List Name"
           type="text"
           fullWidth
           value={itemText}

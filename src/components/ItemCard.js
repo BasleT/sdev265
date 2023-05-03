@@ -92,15 +92,16 @@ const ItemCard = ({ item, onDelete, items, setItems, onUpdate, onAdd }) => {
   };
 
   return (
-    <Card
-      sx={{
-        minWidth: 275,
-        margin: 1,
-        width: { xs: "100%", sm: "50%" },
-        position: "relative",
-        height: "fit-content",
-      }}
-    >
+<Card
+  sx={{
+    minWidth: 275,
+    margin: 1,
+    width: { xs: "100%", sm: "50%" },
+    position: "relative",
+    height: "fit-content",
+    maxWidth: 400 // Set the maximum width to 400px
+  }}
+>
       <CardContent>
         <Typography variant="h5" component="h2">
           {item.text}

@@ -21,16 +21,16 @@ const AddItemModal = ({ open, handleClose, onAddItem }) => {
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Add Item</DialogTitle>
+      <DialogTitle>Create a Parent List Name</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          To add a new item, please enter the item text here.
+          To add a new Parent List Name, please enter the Name here.
         </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
           id="itemText"
-          label="Item Text"
+          label="Parent Name"
           type="text"
           fullWidth
           value={itemText}
@@ -39,7 +39,7 @@ const AddItemModal = ({ open, handleClose, onAddItem }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit}>Add Item</Button>
+        <Button onClick={handleSubmit}>Add Parent</Button>
       </DialogActions>
     </Dialog>
   );
